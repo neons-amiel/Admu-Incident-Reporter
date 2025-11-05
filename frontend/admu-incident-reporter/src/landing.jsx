@@ -1,13 +1,47 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import admulogo from './logos/admu_logo.png'
+import { useNavigate } from 'react-router-dom';
 
+import admulogo from './logos/admu_logo.png';
+import asean from './logos/asean.png';
+
+import Posts from './components/posts.jsx';
+
+
+
+const posts = [
+    {
+        location: "Faura Hall",
+        desc: "A Dog died omg !! help please",
+        image: asean
+    },
+    {
+        location: "Faura Hall",
+        desc: "A Dog died omg !! help please",
+        image: asean
+    },
+    {
+        location: "Faura Hall",
+        desc: "A Dog died omg !! help please",
+        image: asean
+    }
+]
 
 function Landing() {
+
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate('/report');
+    };
+
+
     return (
 
-        <div class=' flex flex-col min-h-screen max-w-8xl  '>
-            <nav class="flex flex-row justify-between items-center bg-indigo-900 px-9 py-4 text-white ">
+        <div className=' flex flex-col min-h-screen w-full overflow-x-hidden '>
+
+            {/* Navbar */}
+            <nav className="flex flex-row justify-between items-center bg-indigo-900 px-9 py-4 text-white ">
                 <div>
                     <Link to='/'><img src={admulogo} class='h-20 y-20' alt="ADMU Logo" /></Link>
                 </div>
@@ -19,12 +53,35 @@ function Landing() {
                 </ul>
             </nav>
 
-            <div class='flex flex-col justify-center items-center px-5 py-4 '>
-                <h1 class='text-3xl font-bold'>Welcome to the ADMU Incident Reporter</h1>
+            {/* Hero */}
+
+            <div class='flex flex-col justify-center items-center px-5 lg:py-10 py-4 '>
+                <h1 class='lg:text-6xl text-center font-bold'>Welcome to the ADMU Incident Reporter</h1>
                 <div class='flex flex-col justify-center items-center gap-6'>
-                    <h1 class='text-2xl font-semibold pt-10'>Witnessed an incident?</h1>
-                    <button class='bg-indigo-900 text-white px-20 py-10 rounded-xl hover:bg-indigo-500 text-xl'>Report it here!</button>
+                    <h1 class='lg:text-4xl text-center font-semibold pt-10'>Witnessed an incident?</h1>
+                    <button class='bg-indigo-900 text-white px-20 py-10 rounded-xl hover:bg-indigo-500 text-xl' onClick={handleClick}> 
+                        Report it here!
+                    </button>
                 </div>
+
+            </div>
+
+            {/* Everyone's Reports */}
+ 
+            <div className='flex flex-col justify-center  px-5 py-4 w-full  '>
+                <h1 className='flex text-5xl lg:pb-20 pb-10'>Reports: </h1>
+                <div class='flex flex-wrap justify-center items-start lg:gap-6 gap-8  pb-10'>
+                    {posts.map((post,index) => (
+                        <Posts
+                        key={index}
+                        location={post.location}
+                        desc={post.desc}
+                        image={post.image}
+                        />
+                    ))}
+
+                </div>
+            
 
             </div>
 

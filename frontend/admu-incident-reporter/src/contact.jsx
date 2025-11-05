@@ -6,7 +6,7 @@ import admulogo from './logos/admu_logo.png'
 function Contact() {
     return(
 
-        <div class=' flex flex-col min-h-screen max-w-8xl  '>
+        <div class=' flex flex-col min-h-screen w-full overflow-x-hidden '>
             <nav class="flex flex-row justify-between items-center bg-indigo-900 px-9 py-4 text-white ">
                 <div>
                     <a href="#"><img src={admulogo} class='h-20 y-20' alt="ADMU Logo" /></a>
