@@ -23,7 +23,7 @@ function Report() {
                 </div>
                 
                 <ul class='flex flex-row gap-8 text-xl'>
-                    <li><Link to='/'>Home</Link></li>
+                    <li><Link to='/home'>Home</Link></li>
                     <li><Link to='/report'>Make a Report</Link></li>
                     <li><Link to='/contact'>Contact Us</Link></li>
                 </ul>
