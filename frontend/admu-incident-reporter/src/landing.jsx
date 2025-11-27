@@ -9,25 +9,9 @@ import Posts from './components/posts.jsx';
 
 
 
-const posts = [
-    {
-        location: "Faura Hall",
-        desc: "A Dog died omg !! help please",
-        image: asean
-    },
-    {
-        location: "Faura Hall",
-        desc: "A Dog died omg !! help please",
-        image: asean
-    },
-    {
-        location: "Faura Hall",
-        desc: "A Dog died omg !! help please",
-        image: asean
-    }
-]
 
-function Landing() {
+
+function Landing({posts}) {
 
     const navigate = useNavigate();
 
@@ -59,7 +43,7 @@ function Landing() {
                 <h1 class='lg:text-6xl text-5xl text-center font-bold lg:pt-5 pt-20'>Welcome to the ADMU Incident Reporter</h1>
                 <div class='flex flex-col justify-center items-center gap-6'>
                     <h1 class='lg:text-4xl text-2xl text-center font-semibold lg:pt-14 pt-10'>Witnessed an incident?</h1>
-                    <button class='bg-indigo-900 text-white lg:px-20 lg:py-10 py-6 px-6 rounded-xl hover:bg-indigo-500 text-xl' onClick={handleClick}> 
+                    <button class='bg-indigo-900 text-white lg:px-5 lg:py-5 py-6 px-6 rounded-xl hover:bg-indigo-500 text-xl' onClick={handleClick}> 
                         Report it here!
                     </button>
                 </div>
@@ -76,7 +60,7 @@ function Landing() {
                         key={index}
                         location={post.location}
                         desc={post.desc}
-                        image={post.image}
+                        image={post.image ? URL.createObjectURL(post.image) : null}
                         />
                     ))}
 

@@ -1,7 +1,6 @@
-import { StrictMode } from 'react'
+import { StrictMode, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
-
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import './index.css'
 
@@ -10,19 +9,27 @@ import Landing from './landing.jsx'
 import Report from './report.jsx'
 import Contact from './contact.jsx'
 
+function Root() {
+  const [posts, setPosts] = useState([]);
 
+  const addPost = (post) => {
+    setPosts(prev => [...prev, post]);
+  };
 
-
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  return (
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Login />} />
-        <Route path='/home' element={<Landing />} />
-        <Route path='/report' element={<Report />} />
+        <Route path='/home' element={<Landing posts={posts} />} />
+        <Route path='/report' element={<Report addPost={addPost} />} />
         <Route path='/contact' element={<Contact />} />
       </Routes>
     </BrowserRouter>
+  );
+}
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <Root />
   </StrictMode>
-)
-  
+);
