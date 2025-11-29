@@ -27,7 +27,7 @@ function Landing({posts}) {
             {/* Navbar */}
             <nav className="flex flex-row justify-between items-center bg-indigo-900 px-9 py-4 text-white ">
                 <div>
-                    <Link to='/'><img src={admulogo} class='h-20 y-20' alt="ADMU Logo" /></Link>
+                    <Link to='/home'><img src={admulogo} class='h-20 y-20' alt="ADMU Logo" /></Link>
                 </div>
                 
                 <ul class='flex flex-row gap-8 text-xl'>
@@ -39,7 +39,7 @@ function Landing({posts}) {
 
             {/* Hero */}
 
-            <div class='flex flex-col lg:justify-center lg:items-center justify-start items-center lg:h-screen h-3/4py-10 '>
+            <div class='flex flex-col lg:justify-center lg:items-center justify-start items-center lg:h-screen h-3/4 py-10 '>
                 <h1 class='lg:text-6xl text-5xl text-center font-bold lg:pt-5 pt-20'>Welcome to the ADMU Incident Reporter</h1>
                 <div class='flex flex-col justify-center items-center gap-6'>
                     <h1 class='lg:text-4xl text-2xl text-center font-semibold lg:pt-14 pt-10'>Witnessed an incident?</h1>
@@ -52,7 +52,7 @@ function Landing({posts}) {
 
             {/* Everyone's Reports */}
  
-            <div className='flex flex-col justify-center  px-5 py-4 w-full  '>
+            <div className='flex flex-col justify-center  px-10 py-4 w-full  '>
                 <h1 className='flex text-5xl lg:pb-20 pb-10'>Reports: </h1>
                 <div class='flex flex-wrap justify-center items-start lg:gap-6 gap-8  pb-10'>
                     {posts.map((post,index) => (
@@ -65,7 +65,13 @@ function Landing({posts}) {
                     ))}
 
                 </div>
-            
+
+                <h3 class='flex justify-start items-center px-5 py-3 bg-blue-900 rounded-md w-fit text-white hover:bg-blue-500'>
+                        Log Out
+                </h3>
+
+
+                
 
             </div>
 

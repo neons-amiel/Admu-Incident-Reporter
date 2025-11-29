@@ -1,70 +1,84 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Removed unused 'Link'
 import admulogo from './logos/admu_logo.png';
 
 function Login() {
 
-  {/* setting accounts before database*/}
-
-  const students = [
-    { id: '230012' },
-    { id: '235198' },
-    { id: '233942' },
-  ]
-
-  const admins =[
-    {
-      username: 'amiel',
-      password: '123'
-    },
-    {
-      username: 'martin',
-      password: '123'
-    },
-    {
-      username: 'mykel',
-      password: '123'
-    },
-  ]
 
   const [studentId, setStudentId] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
-  
-
-  const navigate = useNavigate();
   const [role, setRole] = useState(null); 
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError('');
-
   
+  const navigate = useNavigate();
+
+ 
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Stops page refresh
+    setError('');
+    
+
     if (role === 'student') {
-      const found = students.find( s => s.id === studentId);
-      
-      if (role === 'student'){
-        if (studentId.length !== 6 || isNaN(studentId)) {
+      if (studentId.length !== 6 || isNaN(studentId)) {
           setError("Invalid ID Number. Must be six numbers");
           return;
-        }
-      if (!found) {
-        setError("Student doesnt exist");
-        return;
-        } 
       }
+      try {
+        console.log("Checking Student ID:", studentId);
 
-      navigate('/home');
-    }
-    if (role === 'admin') {
-      const found = admins.find( a => a.username === username && a.password === password  )
-      if (!found) {
-        setError("Invalid username or password");
-        return;
+      
+        const response = await fetch('http://localhost:9999/student/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: studentId }) // Matching DtoStudent
+        });
+
+        if (response.ok) {
+           
+            console.log("Student Logged In:", studentId);
+            
+           
+            localStorage.setItem('loggedInStudentId', studentId);
+            localStorage.setItem('userRole', 'student');
+            
+            navigate('/home');
+        } else {
+           
+            setError("ID Number does not exist");
+        }
+      } catch (err) {
+        console.error("Connection Error:", err);
+        setError("Could not connect to Student Server (Port 9999).");
       }
-      navigate('/home');
+    }
+
+    if (role === 'admin') {
+      try {
+        console.log("Attempting Admin Login...");
+        const response = await fetch('http://localhost:9998/admin/login', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({ 
+                username: username, 
+                password: password 
+            })
+        });
+
+        if (response.ok) {
+            const adminData = await response.json();
+            console.log("Logged in as:", adminData);
+            navigate('/home');
+        } else {
+            setError("Invalid username or password.");
+        }
+      } catch (err) {
+        console.error("Connection Error:", err);
+        setError("Could not connect to the server. Is Spring Boot running?");
+      }
     }
   };
 
@@ -82,13 +96,13 @@ function Login() {
           <ul className="flex lg:flex-col lg:text-lg text-md lg:justify-center lg:items-start gap-8 flex-row justify-center items-center">
             <button
               className={`hover:underline ${role === 'student' ? 'font-bold underline' : ''}`}
-              onClick={() => setRole('student')}
+              onClick={() => { setRole('student'); setError(''); }}
             >
               Log in as Student
             </button>
             <button
               className={`hover:underline ${role === 'admin' ? 'font-bold underline' : ''}`}
-              onClick={() => setRole('admin')}
+              onClick={() => { setRole('admin'); setError(''); }}
             >
               Log in as ADMU Admin
             </button>
@@ -96,26 +110,26 @@ function Login() {
         </div>
       </div>
 
-      
+      {/* LOGIN FORM */}
       <div className="flex flex-col min-h-screen p-10 w-full justify-center items-center">
         {!role && (
           <p className="text-gray-600 text-lg">Log in to ADMU Incident Reporter</p>
         )}
 
         {role && (
+          
           <form onSubmit={handleSubmit} className="flex flex-col gap-3 w-2/3 lg:justify-center lg:items-center justify-start items-center">
             {error && <p className="text-red-500 text-sm">{error}</p>}
+            
             {role === 'student' && (
-              <>
-                <input
-                  value={studentId}
-                  onChange={e => setStudentId(e.target.value)}
-                  type="number"
-                  placeholder="Student ID"
-                  className="rounded-md border p-2 w-2/3"
-                  required
-                />
-              </>
+              <input
+                value={studentId}
+                onChange={e => setStudentId(e.target.value)}
+                type="number"
+                placeholder="Student ID"
+                className="rounded-md border p-2 w-2/3"
+                required
+              />
             )}
 
             {role === 'admin' && (
@@ -137,13 +151,11 @@ function Login() {
                   required
                 />
               </>
-              
             )}
 
            
             <button
-              type="submit"
-              onClick={handleSubmit}
+              type="submit" 
               className="flex justify-center px-4 py-2 bg-indigo-800 hover:bg-indigo-500 text-white rounded-md w-2/3"
             >
               Log In
