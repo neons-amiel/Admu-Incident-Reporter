@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,14 +11,71 @@ import Posts from './components/posts.jsx';
 
 
 
-function Landing({posts}) {
+function Landing() {
 
     const navigate = useNavigate();
+
+    const [reports, setReports] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const userRole = localStorage.getItem('userRole') || 'student';
+    const isAdmin = userRole === 'admin';
 
     const handleClick = () => {
         navigate('/report');
     };
+    
+    const handleAdmin = () => {
+        navigate('/adminsettings');
+    }
 
+    const handleLogout = () => {
+        
+        localStorage.clear(); 
+        navigate('/'); 
+    };
+
+    const fetchReports = () => {
+        fetch('http://localhost:9999/incident/all')
+            .then(res => res.json())
+            .then(data => {
+                setReports(data.reverse()); 
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Error fetching reports:", err);
+                setLoading(false);
+            });
+    };
+
+    useEffect(() => {
+        fetchReports(); 
+    }, []);
+
+    const handleDelete = async (reportId) => {
+       
+        if (!window.confirm(`Are you sure you want to delete report ID: ${reportId}?`)) {
+            return;
+        }
+
+        try {
+            
+            const response = await fetch(`http://localhost:9999/incident/delete/${reportId}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                alert(`Report ${reportId} deleted successfully.`);
+                
+                fetchReports(); 
+            } else {
+                alert("Failed to delete report.");
+            }
+        } catch (err) {
+            console.error("Delete Error:", err);
+            alert("Server error during deletion.");
+        }
+    };
 
     return (
 
@@ -34,18 +91,22 @@ function Landing({posts}) {
                     <li><Link to='/home'>Home</Link></li>
                     <li><Link to='/report'>Make a Report</Link></li>
                     <li><Link to='/contact'>Contact Us</Link></li>
+                    
                 </ul>
             </nav>
 
             {/* Hero */}
 
-            <div class='flex flex-col lg:justify-center lg:items-center justify-start items-center lg:h-screen h-3/4 py-10 '>
+            <div class='flex flex-col lg:justify-center lg:items-center justify-start items-center lg:h-screen h-3/4 pb-10  '>
                 <h1 class='lg:text-6xl text-5xl text-center font-bold lg:pt-5 pt-20'>Welcome to the ADMU Incident Reporter</h1>
-                <div class='flex flex-col justify-center items-center gap-6'>
+                <div class='flex flex-col justify-center items-center lg:gap-10 gap-6'>
                     <h1 class='lg:text-4xl text-2xl text-center font-semibold lg:pt-14 pt-10'>Witnessed an incident?</h1>
-                    <button class='bg-indigo-900 text-white lg:px-5 lg:py-5 py-6 px-6 rounded-xl hover:bg-indigo-500 text-xl' onClick={handleClick}> 
+                    {!isAdmin && <button class='bg-indigo-900 text-white lg:px-5 lg:py-5 py-6 px-6 rounded-xl hover:bg-indigo-500 text-xl' onClick={handleClick}> 
                         Report it here!
-                    </button>
+                    </button>}
+                    {isAdmin && <button class='bg-red-600 text-white lg:px-5 lg:py-5 py-6 px-6 rounded-xl hover:bg-red-400 text-xl' onClick={() => navigate('/adminsettings')}> 
+                        Admin Settings
+                    </button>}
                 </div>
 
             </div>
@@ -54,19 +115,28 @@ function Landing({posts}) {
  
             <div className='flex flex-col justify-center  px-10 py-4 w-full  '>
                 <h1 className='flex text-5xl lg:pb-20 pb-10'>Reports: </h1>
-                <div class='flex flex-wrap justify-center items-start lg:gap-6 gap-8  pb-10'>
-                    {posts.map((post,index) => (
+                <div class='flex flex-wrap justify-start items-start lg:gap-6 gap-8  pb-10'>
+                    {loading && <p className="text-xl">Loading reports...</p>}
+                    
+                    {!loading && reports.length === 0 && (
+                         <p className="text-xl text-gray-500">No incidents reported yet.</p>
+                    )}
+
+                    
+                    {reports.map((report) => (
                         <Posts
-                        key={index}
-                        location={post.location}
-                        desc={post.desc}
-                        image={post.image ? URL.createObjectURL(post.image) : null}
+                            key={report.id}
+                            location={report.location} 
+                            desc={report.description} 
+                            time={report.timestamp}
+                            studentId={report.studentid}
+                            image={report.image} 
                         />
                     ))}
 
                 </div>
 
-                <h3 class='flex justify-start items-center px-5 py-3 bg-blue-900 rounded-md w-fit text-white hover:bg-blue-500'>
+                <h3 class='flex justify-start items-center px-5 py-3 bg-blue-900 rounded-md w-fit text-white hover:bg-blue-500 cursor-pointer' onClick={handleLogout}>
                         Log Out
                 </h3>
 

@@ -32,14 +32,12 @@ function Login() {
         const response = await fetch('http://localhost:9999/student/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: studentId }) // Matching DtoStudent
+            body: JSON.stringify({ id: studentId }) 
         });
 
         if (response.ok) {
            
             console.log("Student Logged In:", studentId);
-            
-           
             localStorage.setItem('loggedInStudentId', studentId);
             localStorage.setItem('userRole', 'student');
             
@@ -71,13 +69,14 @@ function Login() {
         if (response.ok) {
             const adminData = await response.json();
             console.log("Logged in as:", adminData);
+            localStorage.setItem('userRole', 'admin');
             navigate('/home');
         } else {
             setError("Invalid username or password.");
         }
       } catch (err) {
         console.error("Connection Error:", err);
-        setError("Could not connect to the server. Is Spring Boot running?");
+        setError("Could not connect to the server. (Admin Port 9998).");
       }
     }
   };

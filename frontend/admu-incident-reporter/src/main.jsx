@@ -8,6 +8,8 @@ import Login from './login.jsx'
 import Landing from './landing.jsx'
 import Report from './report.jsx'
 import Contact from './contact.jsx'
+import Admin from './admin.jsx'
+
 
 function Root() {
   const [posts, setPosts] = useState([]);
@@ -23,6 +25,7 @@ function Root() {
         <Route path='/home' element={<Landing posts={posts} />} />
         <Route path='/report' element={<Report addPost={addPost} />} />
         <Route path='/contact' element={<Contact />} />
+        <Route path='/adminsettings' element={<Admin />} />
       </Routes>
     </BrowserRouter>
   );
