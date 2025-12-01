@@ -108,7 +108,7 @@ function AdminSettings() {
    
     const userRole = localStorage.getItem('userRole');
     if (userRole !== 'admin') {
-        navigate('/home'); 
+        navigate('/'); 
         return null; 
     }
 

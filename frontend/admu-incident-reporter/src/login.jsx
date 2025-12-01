@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Removed unused 'Link'
+import { useNavigate } from 'react-router-dom'; 
 import admulogo from './logos/admu_logo.png';
 
 function Login() {

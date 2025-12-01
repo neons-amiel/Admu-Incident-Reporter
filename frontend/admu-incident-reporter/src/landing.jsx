@@ -48,34 +48,38 @@ function Landing() {
             });
     };
 
-    useEffect(() => {
-        fetchReports(); 
-    }, []);
-
     const handleDelete = async (reportId) => {
-       
-        if (!window.confirm(`Are you sure you want to delete report ID: ${reportId}?`)) {
+        if (!window.confirm(`Are you sure you want to delete report ID: ${reportId}? This action is irreversible.`)) {
             return;
         }
 
         try {
-            
+            // THE API CALL GOES HERE!
             const response = await fetch(`http://localhost:9999/incident/delete/${reportId}`, {
                 method: 'DELETE',
             });
 
             if (response.ok) {
-                alert(`Report ${reportId} deleted successfully.`);
                 
+                alert(`Report ${reportId} deleted successfully.`);
                 fetchReports(); 
             } else {
-                alert("Failed to delete report.");
+                
+                const errorText = await response.text();
+                alert(`Failed to delete report ${reportId}. Server response: ${errorText}`);
+                console.error("Delete failed:", errorText);
             }
         } catch (err) {
-            console.error("Delete Error:", err);
-            alert("Server error during deletion.");
+            console.error("Connection Error:", err);
+            alert("Could not connect to the server for deletion.");
         }
     };
+
+    useEffect(() => {
+        fetchReports(); 
+    }, []);
+
+    
 
     return (
 
@@ -111,7 +115,7 @@ function Landing() {
 
             </div>
 
-            {/* Everyone's Reports */}
+           
  
             <div className='flex flex-col justify-center  px-10 py-4 w-full  '>
                 <h1 className='flex text-5xl lg:pb-20 pb-10'>Reports: </h1>
@@ -126,11 +130,14 @@ function Landing() {
                     {reports.map((report) => (
                         <Posts
                             key={report.id}
+                            reportId={report.id}
                             location={report.location} 
                             desc={report.description} 
                             time={report.timestamp}
                             studentId={report.studentid}
                             image={report.image} 
+                            isAdmin={isAdmin} 
+                            onDelete={handleDelete}
                         />
                     ))}
 
