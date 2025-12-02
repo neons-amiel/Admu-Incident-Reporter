@@ -16,7 +16,7 @@ function Login() {
  
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Stops page refresh
+    e.preventDefault(); 
     setError('');
     
 

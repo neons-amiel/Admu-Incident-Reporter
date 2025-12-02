@@ -1,8 +1,8 @@
-// File: AdminSettings.jsx
+
 
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import admulogo from './logos/admu_logo.png'; // Assuming you have this logo
+import admulogo from './logos/admu_logo.png'; 
 
 function AdminSettings() {
     const navigate = useNavigate();
