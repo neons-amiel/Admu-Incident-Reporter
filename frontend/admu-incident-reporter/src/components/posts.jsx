@@ -12,7 +12,7 @@ function Posts({ reportId, location, desc, image, time, studentId, isAdmin, onDe
         ? image 
         : null;
     
-    // Check if the image path is valid/Base64, otherwise remove the image div
+    
     const renderImage = imageContent && (
         <div className='md:w-1/3 w-full h-64 md:h-auto relative bg-gray-200'>
             <img 
