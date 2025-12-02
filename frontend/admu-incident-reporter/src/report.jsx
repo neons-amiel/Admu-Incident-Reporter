@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // 1. Import useEffect
+import React, { useState, useEffect } from 'react'; 
 import { Link, useNavigate } from 'react-router-dom';
 import admulogo from './logos/admu_logo.png';
 
